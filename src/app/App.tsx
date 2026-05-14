@@ -16,7 +16,7 @@ export default function AmiBirthdayInvitation() {
 
   // Supabase public URL for dresscode image
   const dresscodeImage =
-    'https://YOUR_PROJECT.supabase.co/storage/v1/object/public/birthday-assets/images/dresscode.jpg'
+    'https://rglsaquiaoptymkxbwdf.supabase.co/storage/v1/object/public/image-asset/dresscode/ami%20dc.png'
 
   // Single memories video section
   // Replace this later with your real romantic video URL
