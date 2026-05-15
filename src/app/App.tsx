@@ -653,7 +653,7 @@ export default function AmiBirthdayInvitation() {
               A Little Note
             </p>
 
-            <h2 className="text-[34px] sm:text-4xl font-serif leading-[1.15] mb-8">
+            <h2 className="text-[32px] sm:text-4xl font-serif leading-[1.15] mb-8">
               Happy Birthday, Ami Sayang 💖
             </h2>
 
