@@ -500,7 +500,7 @@ export default function AmiBirthdayInvitation() {
           </div>
 
           <div className="mt-5 bg-[#ffeff6] border border-[#ffd6e7] rounded-2xl p-4 text-center">
-            Pink top + jeans / white bottom ✨
+            Pink Top + Jeans ✨
           </div>
         </div>
       </section>
@@ -654,7 +654,7 @@ export default function AmiBirthdayInvitation() {
             </p>
 
             <h2 className="text-[34px] sm:text-4xl font-serif leading-[1.15] mb-8">
-              Happy Birthday, Ami 💖
+              Happy Birthday, Ami Sayang 💖
             </h2>
 
             <div className="space-y-6 text-[#6D4552] leading-8 text-lg">
