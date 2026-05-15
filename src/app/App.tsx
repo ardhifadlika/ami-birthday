@@ -8,6 +8,7 @@ export default function AmiBirthdayInvitation() {
 
   const [activeSection, setActiveSection] = useState('hero')
   const [scrollProgress, setScrollProgress] = useState(0)
+  const [imageSectionProgress, setImageSectionProgress] = useState(0)
   const [isPlaying, setIsPlaying] = useState(true)
   const [isOpening, setIsOpening] = useState(false)
   const [showSurprise, setShowSurprise] = useState(false)
@@ -37,12 +38,16 @@ export default function AmiBirthdayInvitation() {
     desktopRight: 'PASTE_DESKTOP_RIGHT_BACKGROUND_IMAGE_URL_HERE',
   }
 
+  const imageSectionImage =
+    'https://rglsaquiaoptymkxbwdf.supabase.co/storage/v1/object/public/image-asset/background/Ours%202.png'
+
   const sectionNav = [
     { id: 'hero', label: 'Open' },
     { id: 'invitation', label: 'Invite' },
     { id: 'dresscode', label: 'Dress' },
     { id: 'schedule', label: 'Plan' },
     { id: 'memories', label: 'Memories' },
+    { id: 'image-section', label: 'Image' },
     { id: 'letter', label: 'Note' },
     { id: 'surprise', label: 'Surprise' },
   ]
@@ -92,9 +97,16 @@ export default function AmiBirthdayInvitation() {
     const sectionIndex = Math.round(page.scrollTop / window.innerHeight)
     const section = sectionNav[Math.min(sectionNav.length - 1, Math.max(0, sectionIndex))]
     const maxScroll = page.scrollHeight - page.clientHeight
+    const imageSectionIndex = sectionNav.findIndex(
+      (item) => item.id === 'image-section',
+    )
+    const imageSectionStart = imageSectionIndex * window.innerHeight
+    const imageToLetterProgress =
+      (page.scrollTop - imageSectionStart) / window.innerHeight
 
     setActiveSection(section.id)
     setScrollProgress(maxScroll > 0 ? page.scrollTop / maxScroll : 0)
+    setImageSectionProgress(Math.min(1, Math.max(0, imageToLetterProgress)))
   }
 
   const handleOpenInvitation = () => {
@@ -600,42 +612,77 @@ export default function AmiBirthdayInvitation() {
         </div>
       </section>
 
+      {/* IMAGE SECTION */}
+      <section
+        id="image-section"
+        className="relative z-10 min-h-screen snap-start overflow-hidden px-6 py-12 flex items-center justify-center"
+      >
+        <img
+          src={imageSectionImage}
+          alt="A birthday memory together"
+          className="h-[82vh] max-h-[760px] w-auto max-w-[92vw] object-contain transition-transform duration-500 ease-out md:max-w-[58vw]"
+          style={{
+            transform: `translate3d(0, ${imageSectionProgress * -72}px, 0) scale(${
+              1 + imageSectionProgress * 0.035
+            })`,
+          }}
+        />
+      </section>
+
       {/* LETTER */}
-      <section id="letter" className="relative z-10 min-h-screen snap-start px-6 py-24 flex items-center">
-        <div className="max-w-md mx-auto text-center">
-          <p className="text-[#ff70ae] text-sm tracking-[0.25em] uppercase mb-4">
-            A Little Note
-          </p>
+      <section
+        id="letter"
+        className="relative z-10 min-h-screen snap-start overflow-hidden px-6 py-16 flex items-center"
+      >
+        <div className="mx-auto grid w-full max-w-5xl items-center gap-10 md:grid-cols-[minmax(0,0.95fr)_minmax(0,1fr)]">
+          <div className="flex justify-center md:justify-start">
+            <img
+              src={imageSectionImage}
+              alt="A birthday memory together"
+              className="h-[44vh] max-h-[520px] w-auto max-w-[82vw] object-contain transition-transform duration-500 ease-out md:h-[68vh] md:max-w-full"
+              style={{
+                transform: `translate3d(0, ${
+                  -96 + imageSectionProgress * 72
+                }px, 0) scale(${1.04 - imageSectionProgress * 0.04})`,
+              }}
+            />
+          </div>
 
-          <h2 className="text-[34px] sm:text-4xl font-serif leading-[1.15] mb-8">
-            Happy Birthday, Ami 💖
-          </h2>
-
-          <div className="space-y-6 text-[#6D4552] leading-8 text-lg">
-            <p>
-              Thank you for always being my safest place, my favorite person,
-              and the prettiest part of my days.
+          <div className="text-center md:text-left">
+            <p className="text-[#ff70ae] text-sm tracking-[0.25em] uppercase mb-4">
+              A Little Note
             </p>
 
-            <p>
-              I hope this birthday becomes one of the happiest memories for
-              you.
-            </p>
+            <h2 className="text-[34px] sm:text-4xl font-serif leading-[1.15] mb-8">
+              Happy Birthday, Ami 💖
+            </h2>
 
-            <p>
-              And tonight, I just want to spend every little moment with you ❤️
-            </p>
-
-            <div className="pt-8 text-right border-t border-[#ffd6e7] mt-8">
-              <p className="text-[#8A5A68] italic mb-2">With Love,</p>
-
-              <p className="font-serif text-2xl text-[#ff70ae]">
-                Ardhi Satria
+            <div className="space-y-6 text-[#6D4552] leading-8 text-lg">
+              <p>
+                Thank you for always being my safest place, my favorite person,
+                and the prettiest part of my days.
               </p>
 
-              <p className="text-sm text-[#8A5A68] mt-1">
-                8 June 2026
+              <p>
+                I hope this birthday becomes one of the happiest memories for
+                you.
               </p>
+
+              <p>
+                And tonight, I just want to spend every little moment with you ❤️
+              </p>
+
+              <div className="pt-8 text-right border-t border-[#ffd6e7] mt-8">
+                <p className="text-[#8A5A68] italic mb-2">With Love,</p>
+
+                <p className="font-serif text-2xl text-[#ff70ae]">
+                  Ardhi Satria
+                </p>
+
+                <p className="text-sm text-[#8A5A68] mt-1">
+                  8 June 2026
+                </p>
+              </div>
             </div>
           </div>
         </div>
