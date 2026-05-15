@@ -1,10 +1,13 @@
 import { useRef, useState } from 'react'
 
 export default function AmiBirthdayInvitation() {
+  const pageRef = useRef<HTMLDivElement>(null)
   const audioRef = useRef<HTMLIFrameElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
+  const [activeSection, setActiveSection] = useState('hero')
+  const [scrollProgress, setScrollProgress] = useState(0)
   const [isPlaying, setIsPlaying] = useState(true)
   const [isOpening, setIsOpening] = useState(false)
   const [showSurprise, setShowSurprise] = useState(false)
@@ -27,6 +30,22 @@ export default function AmiBirthdayInvitation() {
   // Controls video playback state
   const memoryVideoRef = useRef<HTMLVideoElement>(null)
   const [isMemoryPlaying, setIsMemoryPlaying] = useState(false)
+
+  const parallaxImages = {
+    mobile: 'PASTE_MOBILE_BACKGROUND_IMAGE_URL_HERE',
+    desktopLeft: 'PASTE_DESKTOP_LEFT_BACKGROUND_IMAGE_URL_HERE',
+    desktopRight: 'PASTE_DESKTOP_RIGHT_BACKGROUND_IMAGE_URL_HERE',
+  }
+
+  const sectionNav = [
+    { id: 'hero', label: 'Open' },
+    { id: 'invitation', label: 'Invite' },
+    { id: 'dresscode', label: 'Dress' },
+    { id: 'schedule', label: 'Plan' },
+    { id: 'memories', label: 'Memories' },
+    { id: 'letter', label: 'Note' },
+    { id: 'surprise', label: 'Surprise' },
+  ]
 
   const schedule = [
     {
@@ -58,6 +77,25 @@ export default function AmiBirthdayInvitation() {
       iconAlt: 'Gift icon',
     },
   ]
+
+  const isPlaceholderUrl = (url: string) => url.includes('PASTE')
+
+  const scrollToSection = (sectionId: string) => {
+    document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  const handlePageScroll = () => {
+    const page = pageRef.current
+
+    if (!page) return
+
+    const sectionIndex = Math.round(page.scrollTop / window.innerHeight)
+    const section = sectionNav[Math.min(sectionNav.length - 1, Math.max(0, sectionIndex))]
+    const maxScroll = page.scrollHeight - page.clientHeight
+
+    setActiveSection(section.id)
+    setScrollProgress(maxScroll > 0 ? page.scrollTop / maxScroll : 0)
+  }
 
   const handleOpenInvitation = () => {
     setIsOpening(true)
@@ -200,7 +238,11 @@ export default function AmiBirthdayInvitation() {
   return (
     // Main wrapper uses vertical snap scrolling.
     // Each section becomes a full-screen cinematic panel.
-    <div className="h-screen overflow-y-scroll snap-y snap-mandatory scroll-smooth bg-[#ffeff6] text-[#4A2230] overflow-x-hidden font-sans relative">
+    <div
+      ref={pageRef}
+      onScroll={handlePageScroll}
+      className="h-screen overflow-y-scroll snap-y snap-mandatory scroll-smooth bg-[#ffeff6] text-[#4A2230] overflow-x-hidden font-sans relative"
+    >
       {/* ROMANTIC MUSIC */}
       <iframe
         ref={audioRef}
@@ -216,8 +258,106 @@ export default function AmiBirthdayInvitation() {
         <div className="absolute bottom-20 right-0 w-72 h-72 bg-[#ffbcd9]/30 rounded-full blur-3xl animate-pulse" />
       </div>
 
+      {/* PARALLAX IMAGE PLACEHOLDERS */}
+      <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+        <div className="absolute inset-x-0 bottom-0 flex justify-center md:hidden">
+          {isPlaceholderUrl(parallaxImages.mobile) ? (
+            <div
+              className="h-56 w-56 rounded-full border border-[#ffd6e7] bg-white/35 blur-[1px] transition-transform duration-300"
+              style={{ transform: `translateY(${48 - scrollProgress * 52}px)` }}
+            />
+          ) : (
+            <img
+              src={parallaxImages.mobile}
+              alt=""
+              aria-hidden="true"
+              className="h-[42vh] max-h-80 object-contain opacity-90 transition-transform duration-300"
+              style={{ transform: `translateY(${40 - scrollProgress * 56}px)` }}
+            />
+          )}
+        </div>
+
+        <div className="hidden md:block">
+          {isPlaceholderUrl(parallaxImages.desktopLeft) ? (
+            <div
+              className="absolute bottom-0 left-[calc(50%-33rem)] h-72 w-56 rounded-[32px] border border-[#ffd6e7] bg-white/30 blur-[1px] transition-transform duration-300"
+              style={{ transform: `translateY(${32 - scrollProgress * 72}px)` }}
+            />
+          ) : (
+            <img
+              src={parallaxImages.desktopLeft}
+              alt=""
+              aria-hidden="true"
+              className="absolute bottom-0 left-[calc(50%-34rem)] h-[52vh] max-h-[520px] object-contain opacity-90 transition-transform duration-300"
+              style={{ transform: `translateY(${32 - scrollProgress * 72}px)` }}
+            />
+          )}
+
+          {isPlaceholderUrl(parallaxImages.desktopRight) ? (
+            <div
+              className="absolute bottom-0 right-[calc(50%-33rem)] h-72 w-56 rounded-[32px] border border-[#ffd6e7] bg-white/30 blur-[1px] transition-transform duration-300"
+              style={{ transform: `translateY(${44 - scrollProgress * 92}px)` }}
+            />
+          ) : (
+            <img
+              src={parallaxImages.desktopRight}
+              alt=""
+              aria-hidden="true"
+              className="absolute bottom-0 right-[calc(50%-34rem)] h-[52vh] max-h-[520px] object-contain opacity-90 transition-transform duration-300"
+              style={{ transform: `translateY(${44 - scrollProgress * 92}px)` }}
+            />
+          )}
+        </div>
+      </div>
+
+      {/* DESKTOP SECTION NAV */}
+      <nav
+        aria-label="Birthday sections"
+        className="group fixed right-5 top-1/2 z-40 hidden -translate-y-1/2 items-center gap-3 rounded-full border border-white/70 bg-white/45 px-2 py-3 shadow-[0_18px_60px_rgba(255,112,174,0.18)] backdrop-blur-2xl transition-all duration-500 hover:rounded-[28px] hover:bg-white/75 hover:px-3 md:flex"
+      >
+        <div className="relative h-64 w-1 rounded-full bg-[#ffd6e7]">
+          <div
+            className="absolute left-0 top-0 w-full rounded-full bg-[#ff70ae] transition-all duration-500"
+            style={{
+              height: `${
+                ((sectionNav.findIndex((item) => item.id === activeSection) + 1) /
+                  sectionNav.length) *
+                100
+              }%`,
+            }}
+          />
+        </div>
+
+        <div className="flex flex-col gap-1">
+          {sectionNav.map((item) => {
+            const isActive = item.id === activeSection
+
+            return (
+              <button
+                key={item.id}
+                onClick={() => scrollToSection(item.id)}
+                className={`flex h-8 origin-right items-center justify-end gap-2 rounded-full px-2 text-xs font-medium transition-all duration-500 ${
+                  isActive
+                    ? 'bg-[#ff70ae] text-white shadow-[0_10px_24px_rgba(255,112,174,0.28)]'
+                    : 'text-[#8A5A68] hover:bg-[#ffeff6]'
+                }`}
+              >
+                <span className="max-w-0 translate-x-3 overflow-hidden whitespace-nowrap opacity-0 blur-sm transition-all duration-500 group-hover:max-w-24 group-hover:translate-x-0 group-hover:opacity-100 group-hover:blur-0">
+                  {item.label}
+                </span>
+                <span
+                  className={`h-2.5 w-2.5 rounded-full transition-all duration-500 ${
+                    isActive ? 'bg-white' : 'bg-[#ff89bc]'
+                  }`}
+                />
+              </button>
+            )
+          })}
+        </div>
+      </nav>
+
       {/* HERO */}
-      <section className="relative min-h-screen snap-start flex flex-col items-center justify-center px-6 text-center">
+      <section id="hero" className="relative z-10 min-h-screen snap-start flex flex-col items-center justify-center px-6 text-center">
         <div className="absolute top-10 flex gap-2 text-xl animate-bounce">
           <span>💖</span>
           <span>✨</span>
@@ -267,7 +407,7 @@ export default function AmiBirthdayInvitation() {
       {/* INVITATION */}
       <section
         id="invitation"
-        className="relative min-h-screen snap-start px-6 py-24 flex items-center justify-center"
+        className="relative z-10 min-h-screen snap-start px-6 py-24 flex items-center justify-center"
       >
         <div className="w-full max-w-md bg-white/70 backdrop-blur-xl border border-[#ffd6e7] rounded-[32px] p-8 shadow-[0_10px_50px_rgba(255,112,174,0.15)]">
           <p className="text-[#ff70ae] text-sm tracking-[0.25em] uppercase mb-4">
@@ -313,7 +453,7 @@ export default function AmiBirthdayInvitation() {
       </section>
 
       {/* DRESSCODE */}
-      <section className="min-h-screen snap-start px-6 py-10 flex items-center">
+      <section id="dresscode" className="relative z-10 min-h-screen snap-start px-6 py-10 flex items-center">
         <div className="w-full max-w-[360px] sm:max-w-md mx-auto bg-white/80 backdrop-blur-xl border border-[#ffd6e7] rounded-[32px] p-6 shadow-[0_10px_30px_rgba(255,112,174,0.08)]">
           <p className="text-[#ff70ae] text-sm tracking-[0.25em] uppercase mb-3">
             Dresscode
@@ -354,7 +494,7 @@ export default function AmiBirthdayInvitation() {
       </section>
 
       {/* SCHEDULE */}
-      <section className="min-h-screen snap-start px-6 py-10 flex items-center">
+      <section id="schedule" className="relative z-10 min-h-screen snap-start px-6 py-10 flex items-center">
         <div className="w-full max-w-[360px] sm:max-w-md mx-auto">
           <p className="text-[#ff70ae] text-sm tracking-[0.25em] uppercase mb-3">
             Today's Plan
@@ -407,7 +547,7 @@ export default function AmiBirthdayInvitation() {
       </section>
 
       {/* MEMORIES */}
-      <section className="min-h-screen snap-start px-6 py-10 flex items-center justify-center">
+      <section id="memories" className="relative z-10 min-h-screen snap-start px-6 py-10 flex items-center justify-center">
         <div className="w-full max-w-5xl mx-auto flex flex-col items-center text-center">
           <p className="text-[#ff70ae] text-sm tracking-[0.25em] uppercase mb-3">
             Memories
@@ -461,7 +601,7 @@ export default function AmiBirthdayInvitation() {
       </section>
 
       {/* LETTER */}
-      <section className="min-h-screen snap-start px-6 py-24 flex items-center">
+      <section id="letter" className="relative z-10 min-h-screen snap-start px-6 py-24 flex items-center">
         <div className="max-w-md mx-auto text-center">
           <p className="text-[#ff70ae] text-sm tracking-[0.25em] uppercase mb-4">
             A Little Note
@@ -502,7 +642,7 @@ export default function AmiBirthdayInvitation() {
       </section>
 
       {/* SURPRISE */}
-      <section className="min-h-screen snap-start px-6 pb-32 text-center flex items-center justify-center">
+      <section id="surprise" className="relative z-10 min-h-screen snap-start px-6 pb-32 text-center flex items-center justify-center">
         <div className="text-center w-full max-w-[340px] sm:max-w-sm mx-auto">
           <p className="text-[#ff70ae] text-sm tracking-[0.25em] uppercase mb-4">
             One More Thing Before Tonight 💕
