@@ -5,7 +5,7 @@ export default function AmiBirthdayInvitation() {
   const videoRef = useRef<HTMLVideoElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
-  const [isPlaying, setIsPlaying] = useState(false)
+  const [isPlaying, setIsPlaying] = useState(true)
   const [isOpening, setIsOpening] = useState(false)
   const [showSurprise, setShowSurprise] = useState(false)
   const [showCamera, setShowCamera] = useState(false)
@@ -33,21 +33,29 @@ export default function AmiBirthdayInvitation() {
       time: '13:00',
       title: 'Pickup My Princess',
       desc: 'Starting our special birthday date together 💕',
+      iconUrl: 'PASTE_PICKUP_ICON_URL_HERE',
+      iconAlt: 'Pickup icon',
     },
     {
       time: '14:00 - 18:00',
       title: 'Misc To Do',
       desc: 'Spending the afternoon together and making memories ✨',
+      iconUrl: 'PASTE_ACTIVITY_ICON_URL_HERE',
+      iconAlt: 'Activity icon',
     },
     {
       time: '18:30 - 19:00',
       title: 'Dinner Time',
       desc: 'Dinner together at MAISON TATSUYA Teppanyaki ❤️',
+      iconUrl: 'PASTE_DINNER_ICON_URL_HERE',
+      iconAlt: 'Dinner icon',
     },
     {
       time: '19:00 - End',
       title: 'Open The Gifts',
       desc: 'Ending the night with surprises made specially for you 🎁',
+      iconUrl: 'PASTE_GIFT_ICON_URL_HERE',
+      iconAlt: 'Gift icon',
     },
   ]
 
@@ -197,9 +205,9 @@ export default function AmiBirthdayInvitation() {
       <iframe
         ref={audioRef}
         className="hidden"
-        src="https://www.youtube.com/embed/WCce-3XMdJs?autoplay=0&loop=1&playlist=WCce-3XMdJs"
+        src="https://www.youtube.com/embed/WCce-3XMdJs?autoplay=1&loop=1&playlist=WCce-3XMdJs"
         title="Romantic Music"
-        allow="autoplay"
+        allow="autoplay; encrypted-media"
       />
 
       {/* FLOATING BACKGROUND */}
@@ -362,16 +370,36 @@ export default function AmiBirthdayInvitation() {
                 key={index}
                 className="bg-white/80 backdrop-blur-xl border border-[#ffd6e7] rounded-[28px] p-5 shadow-[0_10px_30px_rgba(255,112,174,0.08)]"
               >
-                <div className="flex items-center justify-between mb-3 gap-4">
-                  <h3 className="text-xl font-semibold">{item.title}</h3>
-                  <span className="text-[#ff70ae] font-medium text-sm text-right">
-                    {item.time}
-                  </span>
-                </div>
+                <div className="flex gap-4">
+                  <div className="h-16 w-16 shrink-0 rounded-2xl border border-[#ffd6e7] bg-[#ffeff6] p-2 shadow-inner">
+                    {item.iconUrl.includes('PASTE') ? (
+                      <div className="flex h-full w-full items-center justify-center rounded-xl bg-white/70 text-2xl">
+                        ✨
+                      </div>
+                    ) : (
+                      <img
+                        src={item.iconUrl}
+                        alt={item.iconAlt}
+                        className="h-full w-full rounded-xl object-cover"
+                      />
+                    )}
+                  </div>
 
-                <p className="text-[#8A5A68] leading-relaxed">
-                  {item.desc}
-                </p>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-start justify-between mb-3 gap-4">
+                      <h3 className="text-xl font-semibold leading-tight">
+                        {item.title}
+                      </h3>
+                      <span className="text-[#ff70ae] font-medium text-sm text-right shrink-0">
+                        {item.time}
+                      </span>
+                    </div>
+
+                    <p className="text-[#8A5A68] leading-relaxed">
+                      {item.desc}
+                    </p>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
