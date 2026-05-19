@@ -32,24 +32,81 @@ export default function AmiBirthdayInvitation() {
   const memoryVideoRef = useRef<HTMLVideoElement>(null)
   const [isMemoryPlaying, setIsMemoryPlaying] = useState(false)
 
-  const parallaxImages = {
-    mobile: 'PASTE_MOBILE_BACKGROUND_IMAGE_URL_HERE',
-    desktopLeft: 'PASTE_DESKTOP_LEFT_BACKGROUND_IMAGE_URL_HERE',
-    desktopRight: 'PASTE_DESKTOP_RIGHT_BACKGROUND_IMAGE_URL_HERE',
+  const backgroundImages = {
+    cuteAmi:
+      'https://rglsaquiaoptymkxbwdf.supabase.co/storage/v1/object/public/image-asset/background/Cute%20Ami%202.png',
+    love:
+      'https://rglsaquiaoptymkxbwdf.supabase.co/storage/v1/object/public/image-asset/background/love.png',
+    tree:
+      'https://rglsaquiaoptymkxbwdf.supabase.co/storage/v1/object/public/image-asset/background/tree.png',
   }
 
   const imageSectionImage =
     'https://rglsaquiaoptymkxbwdf.supabase.co/storage/v1/object/public/image-asset/background/Ours%202.png'
 
   const sectionNav = [
-    { id: 'hero', label: 'Open' },
-    { id: 'invitation', label: 'Invite' },
-    { id: 'dresscode', label: 'Dress' },
-    { id: 'schedule', label: 'Plan' },
+    { id: 'hero', label: 'Hero' },
+    { id: 'invitation', label: 'Invitation' },
+    { id: 'dresscode', label: 'Dresscode' },
+    { id: 'schedule', label: "Today's Plan" },
     { id: 'memories', label: 'Memories' },
-    { id: 'image-section', label: 'Image' },
-    { id: 'letter', label: 'Note' },
-    { id: 'surprise', label: 'Surprise' },
+    { id: 'image-section', label: 'Our Photo' },
+    { id: 'letter', label: 'A Little Note' },
+    { id: 'surprise', label: 'Last Thing' },
+  ]
+
+  const floatingBackground = [
+    {
+      src: backgroundImages.cuteAmi,
+      wrapperClass: 'top-[9%] left-[5%] md:left-[7%]',
+      imageClass: 'w-28 md:w-44',
+      parallax: -120,
+      rotate: '-10deg',
+      duration: '8s',
+      delay: '0s',
+    },
+    {
+      src: backgroundImages.cuteAmi,
+      wrapperClass: 'top-[43%] right-[2%] md:right-[7%]',
+      imageClass: 'w-24 md:w-40',
+      parallax: -76,
+      rotate: '9deg',
+      duration: '9s',
+      delay: '-2s',
+    },
+    {
+      src: backgroundImages.love,
+      wrapperClass: 'top-[22%] right-[9%] md:right-[18%]',
+      imageClass: 'w-16 md:w-24',
+      parallax: -150,
+      rotate: '14deg',
+      duration: '7s',
+      delay: '-1s',
+    },
+    {
+      src: backgroundImages.love,
+      wrapperClass: 'top-[62%] left-[10%] md:left-[18%]',
+      imageClass: 'w-14 md:w-20',
+      parallax: -96,
+      rotate: '-12deg',
+      duration: '8.5s',
+      delay: '-3s',
+    },
+  ]
+
+  const bottomTrees = [
+    {
+      src: backgroundImages.tree,
+      wrapperClass: 'bottom-[-18px] left-[-34px] md:left-[calc(50%-38rem)]',
+      imageClass: 'w-48 md:w-72',
+      parallax: -48,
+    },
+    {
+      src: backgroundImages.tree,
+      wrapperClass: 'bottom-[-24px] right-[-44px] md:right-[calc(50%-39rem)]',
+      imageClass: 'w-44 scale-x-[-1] md:w-72',
+      parallax: -64,
+    },
   ]
 
   const schedule = [
@@ -82,8 +139,6 @@ export default function AmiBirthdayInvitation() {
       iconAlt: 'Gift icon',
     },
   ]
-
-  const isPlaceholderUrl = (url: string) => url.includes('PASTE')
 
   const scrollToSection = (sectionId: string) => {
     document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' })
@@ -255,6 +310,19 @@ export default function AmiBirthdayInvitation() {
       onScroll={handlePageScroll}
       className="h-screen overflow-y-scroll snap-y snap-mandatory scroll-smooth bg-[#ffeff6] text-[#4A2230] overflow-x-hidden font-sans relative"
     >
+      <style>
+        {`
+          @keyframes ami-float {
+            0%, 100% {
+              transform: translate3d(0, 0, 0) rotate(var(--float-rotate, 0deg));
+            }
+            50% {
+              transform: translate3d(0, -18px, 0) rotate(calc(var(--float-rotate, 0deg) * -1));
+            }
+          }
+        `}
+      </style>
+
       {/* ROMANTIC MUSIC */}
       <iframe
         ref={audioRef}
@@ -264,108 +332,81 @@ export default function AmiBirthdayInvitation() {
         allow="autoplay; encrypted-media"
       />
 
-      {/* FLOATING BACKGROUND */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-10 left-0 w-56 h-56 bg-[#ff89bc]/30 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-20 right-0 w-72 h-72 bg-[#ffbcd9]/30 rounded-full blur-3xl animate-pulse" />
-      </div>
-
-      {/* PARALLAX IMAGE PLACEHOLDERS */}
+      {/* PARALLAX BACKGROUND */}
       <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-        <div className="absolute inset-x-0 bottom-0 flex justify-center md:hidden">
-          {isPlaceholderUrl(parallaxImages.mobile) ? (
-            <div
-              className="h-56 w-56 rounded-full border border-[#ffd6e7] bg-white/35 blur-[1px] transition-transform duration-300"
-              style={{ transform: `translateY(${48 - scrollProgress * 52}px)` }}
-            />
-          ) : (
+        {floatingBackground.map((item, index) => (
+          <div
+            key={`${item.src}-${index}`}
+            className={`absolute opacity-70 md:opacity-80 ${item.wrapperClass}`}
+            style={{
+              transform: `translate3d(0, ${scrollProgress * item.parallax}px, 0)`,
+            }}
+          >
             <img
-              src={parallaxImages.mobile}
+              src={item.src}
               alt=""
               aria-hidden="true"
-              className="h-[42vh] max-h-80 object-contain opacity-90 transition-transform duration-300"
-              style={{ transform: `translateY(${40 - scrollProgress * 56}px)` }}
+              className={`object-contain drop-shadow-[0_18px_34px_rgba(255,112,174,0.18)] ${item.imageClass}`}
+              style={{
+                animation: `ami-float ${item.duration} ease-in-out infinite`,
+                animationDelay: item.delay,
+                '--float-rotate': item.rotate,
+              }}
             />
-          )}
-        </div>
+          </div>
+        ))}
 
-        <div className="hidden md:block">
-          {isPlaceholderUrl(parallaxImages.desktopLeft) ? (
-            <div
-              className="absolute bottom-0 left-[calc(50%-33rem)] h-72 w-56 rounded-[32px] border border-[#ffd6e7] bg-white/30 blur-[1px] transition-transform duration-300"
-              style={{ transform: `translateY(${32 - scrollProgress * 72}px)` }}
-            />
-          ) : (
+        {bottomTrees.map((item, index) => (
+          <div
+            key={`${item.src}-${index}`}
+            className={`absolute opacity-85 ${item.wrapperClass}`}
+            style={{
+              transform: `translate3d(0, ${scrollProgress * item.parallax}px, 0)`,
+            }}
+          >
             <img
-              src={parallaxImages.desktopLeft}
+              src={item.src}
               alt=""
               aria-hidden="true"
-              className="absolute bottom-0 left-[calc(50%-34rem)] h-[52vh] max-h-[520px] object-contain opacity-90 transition-transform duration-300"
-              style={{ transform: `translateY(${32 - scrollProgress * 72}px)` }}
+              className={`object-contain drop-shadow-[0_20px_36px_rgba(74,34,48,0.12)] ${item.imageClass}`}
             />
-          )}
-
-          {isPlaceholderUrl(parallaxImages.desktopRight) ? (
-            <div
-              className="absolute bottom-0 right-[calc(50%-33rem)] h-72 w-56 rounded-[32px] border border-[#ffd6e7] bg-white/30 blur-[1px] transition-transform duration-300"
-              style={{ transform: `translateY(${44 - scrollProgress * 92}px)` }}
-            />
-          ) : (
-            <img
-              src={parallaxImages.desktopRight}
-              alt=""
-              aria-hidden="true"
-              className="absolute bottom-0 right-[calc(50%-34rem)] h-[52vh] max-h-[520px] object-contain opacity-90 transition-transform duration-300"
-              style={{ transform: `translateY(${44 - scrollProgress * 92}px)` }}
-            />
-          )}
-        </div>
+          </div>
+        ))}
       </div>
 
       {/* DESKTOP SECTION NAV */}
       <nav
         aria-label="Birthday sections"
-        className="group fixed right-5 top-1/2 z-40 hidden -translate-y-1/2 items-center gap-3 rounded-full border border-white/70 bg-white/45 px-2 py-3 shadow-[0_18px_60px_rgba(255,112,174,0.18)] backdrop-blur-2xl transition-all duration-500 hover:rounded-[28px] hover:bg-white/75 hover:px-3 md:flex"
+        className="fixed right-7 top-1/2 z-40 hidden -translate-y-1/2 flex-col items-end gap-2 md:flex"
       >
-        <div className="relative h-64 w-1 rounded-full bg-[#ffd6e7]">
-          <div
-            className="absolute left-0 top-0 w-full rounded-full bg-[#ff70ae] transition-all duration-500"
-            style={{
-              height: `${
-                ((sectionNav.findIndex((item) => item.id === activeSection) + 1) /
-                  sectionNav.length) *
-                100
-              }%`,
-            }}
-          />
-        </div>
+        {sectionNav.map((item) => {
+          const isActive = item.id === activeSection
 
-        <div className="flex flex-col gap-1">
-          {sectionNav.map((item) => {
-            const isActive = item.id === activeSection
-
-            return (
-              <button
-                key={item.id}
-                onClick={() => scrollToSection(item.id)}
-                className={`flex h-8 origin-right items-center justify-end gap-2 rounded-full px-2 text-xs font-medium transition-all duration-500 ${
+          return (
+            <button
+              key={item.id}
+              onClick={() => scrollToSection(item.id)}
+              className="group flex h-11 items-center justify-end gap-4"
+            >
+              <span
+                className={`whitespace-nowrap text-right font-light transition-all duration-300 ${
                   isActive
-                    ? 'bg-[#ff70ae] text-white shadow-[0_10px_24px_rgba(255,112,174,0.28)]'
-                    : 'text-[#8A5A68] hover:bg-[#ffeff6]'
+                    ? 'text-[28px] text-[#b10055]'
+                    : 'text-[24px] text-[#f2b6ce] group-hover:text-[28px] group-hover:text-[#b10055]'
                 }`}
               >
-                <span className="max-w-0 translate-x-3 overflow-hidden whitespace-nowrap opacity-0 blur-sm transition-all duration-500 group-hover:max-w-24 group-hover:translate-x-0 group-hover:opacity-100 group-hover:blur-0">
-                  {item.label}
-                </span>
-                <span
-                  className={`h-2.5 w-2.5 rounded-full transition-all duration-500 ${
-                    isActive ? 'bg-white' : 'bg-[#ff89bc]'
-                  }`}
-                />
-              </button>
-            )
-          })}
-        </div>
+                {item.label}
+              </span>
+              <span
+                className={`rounded-full transition-all duration-300 ${
+                  isActive
+                    ? 'h-12 w-12 bg-[#ff64aa]'
+                    : 'h-8 w-8 bg-[#f7a5cc] group-hover:h-12 group-hover:w-12 group-hover:bg-[#ff64aa]'
+                }`}
+              />
+            </button>
+          )
+        })}
       </nav>
 
       {/* HERO */}
@@ -399,7 +440,9 @@ export default function AmiBirthdayInvitation() {
           <div className="absolute inset-0 bg-white/20 scale-x-0 group-active:scale-x-100 origin-left transition-transform duration-500" />
 
           {isOpening && (
-            <div className="absolute inset-0 flex items-center justify-center bg-[#ff70ae] animate-pulse z-20">
+            <div
+              className="absolute inset-0 flex items-center justify-center bg-[#ff70ae] animate-pulse z-20"
+            >
               <div className="flex gap-2 text-lg animate-bounce">
                 <span>💖</span>
                 <span>✨</span>
