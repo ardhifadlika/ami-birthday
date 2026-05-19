@@ -76,8 +76,8 @@ export default function AmiBirthdayInvitation() {
     },
     {
       src: backgroundImages.love,
-      wrapperClass: 'top-[22%] right-[9%] md:right-[18%]',
-      imageClass: 'w-16 md:w-24',
+      wrapperClass: 'top-[18%] right-[11%] md:right-[20%]',
+      imageClass: 'w-10 md:w-14',
       parallax: -150,
       rotate: '14deg',
       duration: '7s',
@@ -85,12 +85,30 @@ export default function AmiBirthdayInvitation() {
     },
     {
       src: backgroundImages.love,
-      wrapperClass: 'top-[62%] left-[10%] md:left-[18%]',
-      imageClass: 'w-14 md:w-20',
+      wrapperClass: 'top-[58%] left-[9%] md:left-[17%]',
+      imageClass: 'w-9 md:w-12',
       parallax: -96,
       rotate: '-12deg',
       duration: '8.5s',
       delay: '-3s',
+    },
+    {
+      src: backgroundImages.love,
+      wrapperClass: 'top-[76%] right-[18%] md:right-[24%]',
+      imageClass: 'w-8 md:w-11',
+      parallax: -132,
+      rotate: '-6deg',
+      duration: '7.8s',
+      delay: '-4s',
+    },
+    {
+      src: backgroundImages.love,
+      wrapperClass: 'top-[31%] left-[18%] md:left-[26%]',
+      imageClass: 'w-8 md:w-11',
+      parallax: -64,
+      rotate: '10deg',
+      duration: '9.2s',
+      delay: '-5s',
     },
   ]
 
@@ -337,7 +355,7 @@ export default function AmiBirthdayInvitation() {
         {floatingBackground.map((item, index) => (
           <div
             key={`${item.src}-${index}`}
-            className={`absolute opacity-70 md:opacity-80 ${item.wrapperClass}`}
+            className={`absolute opacity-60 ${item.wrapperClass}`}
             style={{
               transform: `translate3d(0, ${scrollProgress * item.parallax}px, 0)`,
             }}
@@ -377,7 +395,7 @@ export default function AmiBirthdayInvitation() {
       {/* DESKTOP SECTION NAV */}
       <nav
         aria-label="Birthday sections"
-        className="fixed right-7 top-1/2 z-40 hidden -translate-y-1/2 flex-col items-end gap-2 md:flex"
+        className="fixed right-5 top-1/2 z-40 hidden -translate-y-1/2 flex-col items-end gap-1 md:flex"
       >
         {sectionNav.map((item) => {
           const isActive = item.id === activeSection
@@ -386,22 +404,22 @@ export default function AmiBirthdayInvitation() {
             <button
               key={item.id}
               onClick={() => scrollToSection(item.id)}
-              className="group flex h-11 items-center justify-end gap-4"
+              className="group flex h-7 items-center justify-end gap-2.5"
             >
               <span
-                className={`whitespace-nowrap text-right font-light transition-all duration-300 ${
+                className={`whitespace-nowrap text-right font-light transition-all duration-500 ease-out ${
                   isActive
-                    ? 'text-[28px] text-[#b10055]'
-                    : 'text-[24px] text-[#f2b6ce] group-hover:text-[28px] group-hover:text-[#b10055]'
+                    ? 'text-sm text-[#b10055]'
+                    : 'text-xs text-[#f2b6ce] group-hover:text-sm group-hover:text-[#b10055]'
                 }`}
               >
                 {item.label}
               </span>
               <span
-                className={`rounded-full transition-all duration-300 ${
+                className={`rounded-full transition-all duration-500 ease-out ${
                   isActive
-                    ? 'h-12 w-12 bg-[#ff64aa]'
-                    : 'h-8 w-8 bg-[#f7a5cc] group-hover:h-12 group-hover:w-12 group-hover:bg-[#ff64aa]'
+                    ? 'h-6 w-6 bg-[#ff64aa]'
+                    : 'h-4 w-4 bg-[#f7a5cc] group-hover:h-6 group-hover:w-6 group-hover:bg-[#ff64aa]'
                 }`}
               />
             </button>
@@ -715,7 +733,7 @@ export default function AmiBirthdayInvitation() {
                 And tonight, I just want to spend every little moment with you ❤️
               </p>
 
-              <div className="pt-8 text-right border-t border-[#ffd6e7] mt-8">
+              <div className="pt-8 text-left border-t border-[#ffd6e7] mt-8">
                 <p className="text-[#8A5A68] italic mb-2">With Love,</p>
 
                 <p className="font-serif text-2xl text-[#ff70ae]">
